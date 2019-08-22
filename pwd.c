@@ -7,8 +7,9 @@ void pwd()
   printf("%s\n", buffer); //what if pipe
 }
 
-void tildconvertedpwd(char converted[], char tild[])
-{
+void tildconvertedpwd(char tild[])
+{ 
+  char converted[FILENAME_MAX];
   char current[FILENAME_MAX];
   getcwd(current, FILENAME_MAX);
   int flag = 0;
@@ -36,6 +37,5 @@ void tildconvertedpwd(char converted[], char tild[])
   {
     strcpy(converted, current);
   }
+  printf("<%s%s@%s%s:%s%s%s> ", "\x1B[1;34m", namebuffer, hostbuffer, "\x1B[0m", "\x1B[1;32m", converted, "\x1B[0m");
 }
-
-// void convertreltoabs(char converted[], char tild[])

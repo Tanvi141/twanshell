@@ -1,83 +1,89 @@
 #include "headers.h"
 
-int main(int argc, char **argv)
+void twanloop()
 {
 
-  char tild[FILENAME_MAX];
-  getcwd(tild, FILENAME_MAX);
-  strcat(tild,&argv[0][1]);
-  tild[strlen(tild)-4]='\0';
-  printf("%s\n",tild);
-
-  //if not 0 then error
-  char hostbuffer[256];
-  gethostname(hostbuffer, sizeof(hostbuffer)); //check for return error
-  char namebuffer[256];
-  getlogin_r(namebuffer, sizeof(namebuffer));
-
-  int status = 0;
-
+  //freee
   while (1)
   {
-
-    char converted[FILENAME_MAX];
-    tildconvertedpwd(converted, tild);
-    printf("<%s@%s:%s> ", namebuffer, hostbuffer, converted);
+    
+    tildconvertedpwd(tild);
+    
     char *line = NULL;
-    size_t bufsize = 100; //must set appropriate size
+    size_t bufsize = 0;
     getline(&line, &bufsize, stdin);
-    //printf("%s", line);
-
-    char *args[10]; //must set appropriate size
+    
+    char *tokens[100]; //must set appropriate size
     //how to malloc here?
-    //also how to find how many args are there?
-    int n = 0; //n stores number of arguments
+    //also how to find how many tokens are there?
+    int num = 0; //n stores number of arguments
 
-    args[n] = strtok(line, " \n\r\t");
+    tokens[num] = strtok(line, ";");
 
-    while (args[n] != NULL)
+    while (tokens[num] != NULL)
     {
-      args[++n] = strtok(NULL, " \n\r\t");
+      tokens[++num] = strtok(NULL, ";");
     }
-
-   
-
-    if (strcmp("pwd", args[0]) == 0)
-
-      pwd();
-
-    else if (strcmp("cd", args[0]) == 0)
-      cd(args, tild, n);
-
-    else if (strcmp("echo", args[0]) == 0)
-      echo(args, n);
-
-    else if (strcmp("ls", args[0]) == 0)
-      ls(args, n, tild);
-
-    else if (strcmp("pinfo", args[0]) == 0)
-      pinfo(args, n);
-
-    else if (strcmp("emacs", args[0]) == 0)
+    
+    for (int now = 0; now < num; now++)
     {
-      pid_t pid = fork();
 
-      if (pid == 0)
+      char *args[100]; //must set appropriate size
+      //how to malloc here?
+      //also how to find how many args are there?
+      int n = 0; //n stores number of arguments
+
+      args[n] = strtok(tokens[now], " \n\r\t");
+      
+      while (args[n] != NULL)
       {
-        //printf("\nChild alice\n");
-        execvp(args[0], args);
-        
-        exit(0);
+        args[++n] = strtok(NULL, " \n\r\t");
       }
-      else
-      {
-        //wait(NULL);
-        printf("Child ded\n");
-      }
+      
+      if(n<1) continue;
+      else if(strcmp("&", args[n-1]) == 0)
+        backgrnd(args);
+     
+      else if (strcmp("pwd", args[0]) == 0)
+        pwd();
+
+      else if (strcmp("cd", args[0]) == 0)
+        cd(args, tild, n);
+
+      else if (strcmp("echo", args[0]) == 0)
+        echo(args, n);
+
+      else if (strcmp("ls", args[0]) == 0)
+        ls(args, n, tild);
+
+      else if (strcmp("pinfo", args[0]) == 0)
+        pinfo(args, n);
+
+      else if (strcmp("exit", args[0]) == 0)
+        return;
+
+      else foregrnd(args);
+
+
     }
-
-    free(line);
-    //free(args);
   }
+}
+
+int main(int argc, char **argv)
+{
+  pidcnt=0;
+  getcwd(tild, FILENAME_MAX);
+  strcat(tild, &argv[0][1]);
+  tild[strlen(tild) - 5] = '\0';
+
+  //if not 0 then error
+
+  gethostname(hostbuffer, sizeof(hostbuffer)); //check for return error
+
+  getlogin_r(namebuffer, sizeof(namebuffer));
+  signal(SIGCHLD, child_sig);
+
+  twanloop();
+
   return 0;
 }

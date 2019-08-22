@@ -17,9 +17,18 @@
 #include <poll.h>
 #include <syslog.h>
 
+char hostbuffer[256];
+char namebuffer[256];
+char tild[FILENAME_MAX];
+int pids[100];
+int pidcnt;
+
 void pwd();
 void cd(char *args[], char tild[],int n);
 void echo(char *args[], int n);
-void tildconvertedpwd(char converted[], char tild[]);
+void tildconvertedpwd(char tild[]);
 void ls(char *args[], int n, char tild[]);
 void pinfo(char *args[], int n);
+void child_sig();
+void foregrnd(char *args[]);
+void backgrnd(char *args[]);

@@ -1,2 +1,2 @@
-run: *.c
-	gcc -o run *.c
+twan: *.c
+	gcc -o twan *.c

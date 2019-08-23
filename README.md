@@ -55,11 +55,11 @@ This is a Linux Shell implemented in C.
 
 - `history [number]`
 
- * Displays the last 'number' commands upto 10
- * If 'number'>10 still prints last 10 commands
- * Accepts upto one argument
- * If no arguments it prints last 10 commands
- * If the same command is executed multiple times it is printed only once
+  * Displays the last 'number' commands upto 10
+  * If 'number'>10 still prints last 10 commands
+  * Accepts upto one argument
+  * If no arguments it prints last 10 commands
+  * If the same command is executed multiple times it is printed only once
 
 - `exit`
 

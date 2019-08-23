@@ -4,7 +4,6 @@
 
 This is a Linux Shell implemented in C.
 
-The home directory of the shell is the directory where the executable file is stored.
 
 ## Running
 
@@ -18,7 +17,7 @@ The home directory of the shell is the directory where the executable file is st
 
 - `ls [-l -a] [file]`
 
-  * "ls" - lists all the files and directories in the current directory
+  * "ls" - lists all the files and directories in the current directory in alphabetical orders
   * "ls -a" - display hidden files
   * "ls -l" - long list
   * "ls -al"/"ls -la"/"ls -l -a"/"ls -a -l" - long list including hidden files
@@ -37,27 +36,66 @@ The home directory of the shell is the directory where the executable file is st
 
 - `echo [arguments]`
 
-  - Displays the arguments in the stdout.
-
-- `exit`
-
-  - Exit the shell.
+  * Displays the arguments in the stdout.
+  * "echo" - prints empty line
+  * "echo "text"" - prints "text" (in double quotes)
+  * "echo 'text' " - prints "text" (in single quotes)
+  * "echo text" - prints the text as it is
 
 - `pwd`
 
-  - Show present working directory.
+  * Show present working directory.
+  * Takes no arguments
 
 - `pinfo [pid]`
 
-  - Display the information related to a process.
+  * Display the information related to a process.
+  * At most one argument can be provided
+  * If no argument provided, takes pid of the current process ie the shell
+  
+
+- `exit`
+
+  * Exit the shell.
+
 
 For all the other commands the shell will fork the current process and create child process and execute the command.
 
-The shell can also run commands in the background. To do so, type `&` argument at the end of the command. (_This feature does not work with inbuilt commands_)
+The shell can also run commands in the background. To do so, type `&` argument at the end of the command. (_This feature does not work with built-in commands_)
 
-## Running the Shell
+The home directory of the shell is the directory where the executable file is stored.
 
-1. Run the Makefile
-   - `make all`
-2. Run the executable
-   - `./twan`
+## Explanation of Files
+
+- `bgfg.c`
+  * child_sig() - Called when child process dies
+  * foregrnd() - For foreground processes
+  * backgrnd() - For background processes
+
+- `cd.c`
+  * cd - Changes the directory
+
+- `echo.c` 
+  * echo() - Prints arguments onto stdout
+
+- `headers.h`
+  * Contains all the required header files, global variables and function declarations.
+
+- `ls.c`
+  * ls() - Initialises variables for listing directories
+  * show() - Prints the files in directory
+
+- `pinfo.c`
+  * pinfo() - Prints the info of the process
+  
+- `pwd.c`
+  * pwd() - Print the present working directory
+  * tildconvertedpwd() - Print the command prompts
+  * tildconverter() - Replaces absolute path of home directory with ~ symbol
+
+- `twanshell.c`
+  * main() - main function to initialise things and call the loop
+  * twanloop() - The loop that keeps running throughout
+
+
+

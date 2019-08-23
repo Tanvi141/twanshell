@@ -3,7 +3,6 @@
 void twanloop()
 {
 
-  //freee
   while (1)
   {
 
@@ -26,9 +25,7 @@ void twanloop()
     for (int now = 0; now < num; now++)
     {
 
-      char *args[100]; //must set appropriate size
-      //how to malloc here?
-      //also how to find how many args are there?
+      char *args[100];
       int n = 0; //n stores number of arguments
 
       args[n] = strtok(tokens[now], " \n\r\t");
@@ -42,28 +39,58 @@ void twanloop()
         continue;
 
       else if (strcmp("pwd", args[0]) == 0)
-        pwd();
+      {
+        if (strcmp("&", args[n - 1]) == 0)
+          n--;
+        pwd(n);
+      }
 
       else if (strcmp("cd", args[0]) == 0)
-        cd(args, tild, n);
+      {
+        if (strcmp("&", args[n - 1]) == 0)
+          n--;
+        cd(args, n);
+      }
 
       else if (strcmp("echo", args[0]) == 0)
+      {
+        if (strcmp("&", args[n - 1]) == 0)
+          n--;
         echo(args, n);
+      }
 
       else if (strcmp("ls", args[0]) == 0)
-        ls(args, n, tild);
+      {
+        if (strcmp("&", args[n - 1]) == 0)
+          n--;
+        ls(args, n);
+      }
 
       else if (strcmp("pinfo", args[0]) == 0)
+      {
+        if (strcmp("&", args[n - 1]) == 0)
+          n--;
         pinfo(args, n);
+      }
 
       else if (strcmp("exit", args[0]) == 0)
-        return;
-        
+      {
+        if (strcmp("&", args[n - 1]) == 0)
+          n--;
+        if (n > 1)
+          printf("twanshell: exit: Too many arguments\n");
+        else
+        {
+          free(line);
+          return;
+        }
+      }
+
       else if (strcmp("&", args[n - 1]) == 0)
       {
-        n--;
         backgrnd(args);
       }
+
       else
         foregrnd(args);
     }
@@ -73,15 +100,23 @@ void twanloop()
 int main(int argc, char **argv)
 {
   pidcnt = 0;
+  actives = 0; //number of active processes
   getcwd(tild, FILENAME_MAX);
   strcat(tild, &argv[0][1]);
   tild[strlen(tild) - 5] = '\0';
 
-  //if not 0 then error
+  if (gethostname(hostbuffer, sizeof(hostbuffer)) != 0)
+  {
+    printf("twanshell: Unable to get hostname\n");
+    strcpy(hostbuffer, "HOSTNAME");
+  }
 
-  gethostname(hostbuffer, sizeof(hostbuffer)); //check for return error
+  if (getlogin_r(namebuffer, sizeof(namebuffer)) != 0)
+  {
+    printf("twanshell: Unable to get username\n");
+    strcpy(namebuffer, "USERNAME");
+  }
 
-  getlogin_r(namebuffer, sizeof(namebuffer));
   signal(SIGCHLD, child_sig);
 
   twanloop();

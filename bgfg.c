@@ -6,25 +6,24 @@ void child_sig()
 
     int stat;
     pid = waitpid(-1, &stat, WNOHANG);
-    // if (pid < 0)
-    //     printf("Error: waitpid failed\n");
         
     for (int i = 0; i < pidcnt; i++)
     {
         if (pid == pids[i].pid)
         {
-            int newstat;
-            int exit_status = WEXITSTATUS(newstat);
+            
+            int exit_status = WEXITSTATUS(stat);
             if (exit_status == 0)
             {
-                fprintf(stderr, "Process %s with pid %d exited normally\n",pids[i].name ,pid);
+                fprintf(stderr, "\nProcess %s with pid %d exited normally\n",pids[i].name ,pid);
             }
             else
             {
-                fprintf(stderr, "Process %s with pid %d exited with exit status %d\n",pids[i].name ,pid, exit_status);
+                fprintf(stderr, "\nProcess %s with pid %d exited with exit status %d\n",pids[i].name ,pid, exit_status);
             }
-            tildconvertedpwd(tild);
+            tildconvertedpwd();
             fflush(stdout);
+            actives--;
             break;
         }
     }
@@ -36,11 +35,11 @@ void foregrnd(char *args[]) //change params
     pid = fork();
 
     if (pid < 0)
-        printf("Error: Forking failed\n");
+        printf("twanshell: Error: Forking failed\n");
     else if (pid == 0)
     {
         if (execvp(args[0], args) < 0)
-            printf("Error: execvp failed\n");
+            printf("twanshell: Error: execvp failed\n");
         exit(0);
     }
     else
@@ -64,7 +63,7 @@ void backgrnd(char *args[])
     }
     else
     {
-        printf("[%d] %d\n",pidcnt,pid);
+        printf("[%d] %d\n",++actives,pid);
         pids[pidcnt].pid = pid;
         strcpy(pids[pidcnt++].name, args[0]);
     }

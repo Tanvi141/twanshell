@@ -1,6 +1,6 @@
 #include "headers.h"
 
-void cd(char *args[], char tild[], int n)
+void cd(char *args[],int n)
 {
     char loc[FILENAME_MAX] = "";
 
@@ -16,7 +16,7 @@ void cd(char *args[], char tild[], int n)
     else  //path relative to current directory or home of computer
         strcpy(loc, args[1]);
 
-    if(n>2) fprintf(stderr,"Usage: Too many arguments: cd\n");
+    if(n>2) fprintf(stderr,"twanshell: Error: Too many arguments: cd\n");
 
     else if(chdir(loc)){
         perror("cd");

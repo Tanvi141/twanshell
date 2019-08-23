@@ -5,12 +5,12 @@ void show(char dirname[], int l, int a, int count)
 
     DIR *p;
     struct dirent **files;
-    int lim = scandir(dirname, &files, NULL, alphasort);
+    int lim = scandir(dirname, &files, NULL,alphasort);
     if (lim < 0)
     {
         char message[FILENAME_MAX + 30];
         strcpy(message, "ls: cannot access directory ");
-        fprintf(message, dirname);
+        strcat(message, dirname);
         perror(message);
     }
 
@@ -75,7 +75,7 @@ void show(char dirname[], int l, int a, int count)
     }
 }
 
-void ls(char *args[], int n, char tild[])
+void ls(char *args[], int n)
 {
 
     int l = 0, a = 0, count = 0; //count keeps track of the number of file arguments
@@ -85,12 +85,17 @@ void ls(char *args[], int n, char tild[])
     {
         if (args[i][0] == '-')
         {
-            for (int j = 0; j < strlen(args[i]); j++)
+            for (int j = 1; j < strlen(args[i]); j++)
             {
                 if (args[i][j] == 'l')
                     l = 1;
                 else if (args[i][j] == 'a')
                     a = 1;
+                else
+                {
+                    printf("twanshell: Only flags 'l' and 'a' recognised\n");
+                    return;
+                }
             }
         }
 
@@ -108,7 +113,7 @@ void ls(char *args[], int n, char tild[])
             if (args[i][0] == '~')
             {
                 strcpy(dirname, tild);
-                fprintf(dirname, &args[i][1]);
+                strcat(dirname, &args[i][1]);
             }
 
             else

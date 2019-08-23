@@ -25,15 +25,18 @@ struct procs{
     char name[100];
 };
 
-struct procs pids[100];
+struct procs pids[1024];
 int pidcnt;
+int actives;
 
-void pwd();
-void cd(char *args[], char tild[],int n);
+extern int alphasort();
+void pwd(int n);
+void cd(char *args[],int n);
 void echo(char *args[], int n);
-void tildconvertedpwd(char tild[]);
-void ls(char *args[], int n, char tild[]);
+void tildconvertedpwd();
+void ls(char *args[], int n);
 void pinfo(char *args[], int n);
 void child_sig();
 void foregrnd(char *args[]);
 void backgrnd(char *args[]);
+void tildconverter(char converted[],char current[]);

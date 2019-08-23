@@ -3,7 +3,8 @@
 void pinfo(char *args[], int n)
 {
     int id = getpid();
-    if(n>1) sscanf(args[1],"%d",&id);
+    if (n == 2)
+        sscanf(args[1], "%d", &id);
     char stats[FILENAME_MAX];
     char exec[FILENAME_MAX];
     sprintf(stats, "/proc/%d/stat", id);
@@ -13,7 +14,8 @@ void pinfo(char *args[], int n)
     if (!fd)
     {
         perror("Error: Process does not exist");
-    } 
+        return;
+    }
 
     else
     {
@@ -27,14 +29,16 @@ void pinfo(char *args[], int n)
     }
 
     char path[FILENAME_MAX];
-    int t=readlink(exec, path, 1000);
-    if ( t< 0)
+    int t = readlink(exec, path, 1000);
+    if (t < 0)
     {
         perror("Error reading the process");
     }
     else
     {
-        path[t]='\0';
-        printf("Executable Path -- %s\n", path);
+        path[t] = '\0';
+        char converted[FILENAME_MAX];
+        tildconverter(converted,path);
+        printf("Executable Path -- %s\n",converted);
     }
 }

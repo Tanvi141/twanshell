@@ -4,22 +4,36 @@
 
 This is a Linux Shell implemented in C.
 
-The Shell has been tested on **Linux** based OS.
+The home directory of the shell is the directory where the executable file is stored.
 
-## Structure and Features
+## Running
 
-The application implements a basic Shell which can perform basic Shell operations.
+- run "make"
 
-###The Built-in commands of the shell include
+- execute by using "./twan"
+
+- type "exit" to exit the shell
+
+## Built-In Commands
 
 - `ls [-l -a] [file]`
 
-  - The ls command to list all the files and directories in the specified directory.
-  - Similarities with conventional ls and prints the contents in the alphabetically sorted order.
+  * "ls" - lists all the files and directories in the current directory
+  * "ls -a" - display hidden files
+  * "ls -l" - long list
+  * "ls -al"/"ls -la"/"ls -l -a"/"ls -a -l" - long list including hidden files
+  * The ls command can also be provided with multiple arguments in the same command
+  * The order of the flags and files can also be arbitrary after ls
+
 
 - `cd [file]`
 
-  - The cd command changes directory to the directory specified in the given path.
+  * The cd command changes directory to the directory specified in the given path.
+  * Path can be relative or absolute
+  * "cd .." - goes to previous directory
+  * "cd ." - goes to same directory  
+  * "cd" - goes to ~/
+  * The command can take at most one argument
 
 - `echo [arguments]`
 

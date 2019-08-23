@@ -6,22 +6,28 @@ void child_sig()
 
     int stat;
     pid = waitpid(-1, &stat, WNOHANG);
-
+    // if (pid < 0)
+    //     printf("Error: waitpid failed\n");
+        
     for (int i = 0; i < pidcnt; i++)
     {
-        if (pid < 0)
-            printf("Error: waitpid failed\n");
-
-        int newstat;
-        int a = WEXITSTATUS(newstat);
-        if (a && pid == pids[i])
+        if (pid == pids[i].pid)
         {
-            fprintf(stderr, "Process %d exited with exit status %d\n", pid, a);
+            int newstat;
+            int exit_status = WEXITSTATUS(newstat);
+            if (exit_status == 0)
+            {
+                fprintf(stderr, "Process %s with pid %d exited normally\n",pids[i].name ,pid);
+            }
+            else
+            {
+                fprintf(stderr, "Process %s with pid %d exited with exit status %d\n",pids[i].name ,pid, exit_status);
+            }
             tildconvertedpwd(tild);
             fflush(stdout);
+            break;
         }
     }
-    
 }
 
 void foregrnd(char *args[]) //change params
@@ -54,12 +60,12 @@ void backgrnd(char *args[])
     {
         if (execvp(args[0], args) < 0)
             printf("Error: execvp failed");
-        printf("Child ded");
         exit(0);
     }
     else
     {
-        printf("[1] %d\n", pid);
-        pids[pidcnt++] = pid;
+        printf("[%d] %d\n",pidcnt,pid);
+        pids[pidcnt].pid = pid;
+        strcpy(pids[pidcnt++].name, args[0]);
     }
 }

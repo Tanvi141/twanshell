@@ -2,62 +2,74 @@
 
 void show(char dirname[], int l, int a, int count)
 {
-    //printf("dirname=%s\n", dirname);
+
     DIR *p;
-    p = opendir(dirname);
-    if (p == NULL)
+    struct dirent **files;
+    int lim = scandir(dirname, &files, NULL, alphasort);
+    if (lim < 0)
     {
-        perror("ls: cannot access directory"); //try to print dirname here
+        char message[FILENAME_MAX + 30];
+        strcpy(message, "ls: cannot access directory ");
+        fprintf(message, dirname);
+        perror(message);
     }
 
     else
     {
         if (count > 1)
             printf("%s:\n", dirname);
-        struct dirent *d;
-        while (d = readdir(p))
+
+        for (int i = 0; i < lim; i++)
         {
+            struct dirent *d = files[i];
+
             if (a == 0 && d->d_name[0] == '.')
                 continue;
 
+            char path[FILENAME_MAX];
+            strcpy(path, dirname);
+            strcat(path, "/");
+            strcat(path, d->d_name);
+
             struct stat fileStat;
-            stat(d->d_name, &fileStat);
+            stat(path, &fileStat);
 
             if (l == 1)
             {
-                printf((S_ISDIR(fileStat.st_mode)) ? "d" : "~");
-                printf((fileStat.st_mode & S_IRUSR) ? "r" : "~");
-                printf((fileStat.st_mode & S_IWUSR) ? "w" : "~");
-                printf((fileStat.st_mode & S_IXUSR) ? "x" : "~");
-                printf((fileStat.st_mode & S_IRGRP) ? "r" : "~");
-                printf((fileStat.st_mode & S_IWGRP) ? "w" : "~");
-                printf((fileStat.st_mode & S_IXGRP) ? "x" : "~");
-                printf((fileStat.st_mode & S_IROTH) ? "r" : "~");
-                printf((fileStat.st_mode & S_IWOTH) ? "w" : "~");
-                printf((fileStat.st_mode & S_IXOTH) ? "x" : "~");
+
+                printf((S_ISDIR(fileStat.st_mode)) ? "d" : "-");
+                printf((fileStat.st_mode & S_IRUSR) ? "r" : "-");
+                printf((fileStat.st_mode & S_IWUSR) ? "w" : "-");
+                printf((fileStat.st_mode & S_IXUSR) ? "x" : "-");
+                printf((fileStat.st_mode & S_IRGRP) ? "r" : "-");
+                printf((fileStat.st_mode & S_IWGRP) ? "w" : "-");
+                printf((fileStat.st_mode & S_IXGRP) ? "x" : "-");
+                printf((fileStat.st_mode & S_IROTH) ? "r" : "-");
+                printf((fileStat.st_mode & S_IWOTH) ? "w" : "-");
+                printf((fileStat.st_mode & S_IXOTH) ? "x" : "-");
                 printf(" %ld", fileStat.st_nlink);
-                struct passwd *pw = getpwuid(fileStat.st_uid); //pw=0 if error
+                struct passwd *pw = getpwuid(fileStat.st_uid);
                 struct group *gr = getgrgid(fileStat.st_gid);
                 printf(" %s", pw->pw_name);
                 printf(" %s", gr->gr_name);
                 printf(" %ld", fileStat.st_size);
 
-                char time_str[64] = "";
+                char time_str[100] = "";
                 time_t now = time(NULL);
                 struct tm tmfile, tmnow;
-                localtime_r(&fileStat.st_mtime, &tmfile); 
-                localtime_r(&now, &tmnow);               
+                localtime_r(&fileStat.st_mtime, &tmfile);
+                localtime_r(&now, &tmnow);
                 if (tmfile.tm_year == tmnow.tm_year)
-                {   
-                    strftime(time_str, sizeof(time_str), "%b %e %H:%M",&tmfile); 
+                {
+                    strftime(time_str, sizeof(time_str), "%b %e %H:%M", &tmfile);
                 }
                 else
-                { 
-                    strftime(time_str, sizeof(time_str), "%b %e  %Y",&tmfile);
+                {
+                    strftime(time_str, sizeof(time_str), "%b %e  %Y", &tmfile);
                 }
-                printf(" %s ",time_str);
-
+                printf(" %s ", time_str);
             }
+
             printf("%s\n", d->d_name);
         }
     }
@@ -67,6 +79,7 @@ void ls(char *args[], int n, char tild[])
 {
 
     int l = 0, a = 0, count = 0; //count keeps track of the number of file arguments
+
     //setting the flags
     for (int i = 1; i < n; i++)
     {
@@ -82,7 +95,7 @@ void ls(char *args[], int n, char tild[])
         }
 
         else
-            count++;
+            count++; //keeps track of number of arguments
     }
 
     for (int i = 1; i < n; i++)
@@ -90,11 +103,12 @@ void ls(char *args[], int n, char tild[])
         if (args[i][0] != '-')
         {
             char dirname[FILENAME_MAX];
+
             //replacing the tilda
             if (args[i][0] == '~')
             {
                 strcpy(dirname, tild);
-                strcat(dirname, &args[i][1]);
+                fprintf(dirname, &args[i][1]);
             }
 
             else
@@ -105,7 +119,7 @@ void ls(char *args[], int n, char tild[])
             show(dirname, l, a, count);
         }
     }
-    //printf("count=%d\n", count);
+
     if (count == 0)
         show(".", l, a, count);
 }

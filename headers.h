@@ -20,7 +20,12 @@
 char hostbuffer[256];
 char namebuffer[256];
 char tild[FILENAME_MAX];
-int pids[100];
+struct procs{
+    pid_t pid;
+    char name[100];
+};
+
+struct procs pids[100];
 int pidcnt;
 
 void pwd();

@@ -6,16 +6,14 @@ void twanloop()
   //freee
   while (1)
   {
-    
+
     tildconvertedpwd(tild);
-    
+
     char *line = NULL;
     size_t bufsize = 0;
     getline(&line, &bufsize, stdin);
-    
-    char *tokens[100]; //must set appropriate size
-    //how to malloc here?
-    //also how to find how many tokens are there?
+
+    char *tokens[100];
     int num = 0; //n stores number of arguments
 
     tokens[num] = strtok(line, ";");
@@ -24,7 +22,7 @@ void twanloop()
     {
       tokens[++num] = strtok(NULL, ";");
     }
-    
+
     for (int now = 0; now < num; now++)
     {
 
@@ -34,16 +32,15 @@ void twanloop()
       int n = 0; //n stores number of arguments
 
       args[n] = strtok(tokens[now], " \n\r\t");
-      
+
       while (args[n] != NULL)
       {
         args[++n] = strtok(NULL, " \n\r\t");
       }
-      
-      if(n<1) continue;
-      else if(strcmp("&", args[n-1]) == 0)
-        backgrnd(args);
-     
+
+      if (n < 1)
+        continue;
+
       else if (strcmp("pwd", args[0]) == 0)
         pwd();
 
@@ -61,17 +58,21 @@ void twanloop()
 
       else if (strcmp("exit", args[0]) == 0)
         return;
-
-      else foregrnd(args);
-
-
+        
+      else if (strcmp("&", args[n - 1]) == 0)
+      {
+        n--;
+        backgrnd(args);
+      }
+      else
+        foregrnd(args);
     }
   }
 }
 
 int main(int argc, char **argv)
 {
-  pidcnt=0;
+  pidcnt = 0;
   getcwd(tild, FILENAME_MAX);
   strcat(tild, &argv[0][1]);
   tild[strlen(tild) - 5] = '\0';

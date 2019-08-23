@@ -24,6 +24,8 @@ void twanloop()
 
     for (int now = 0; now < num; now++)
     {
+   
+      historyadd(tokens[now]);
 
       char *args[100];
       int n = 0; //n stores number of arguments
@@ -73,6 +75,13 @@ void twanloop()
         pinfo(args, n);
       }
 
+      else if (strcmp("history", args[0]) == 0)
+      {
+        if (strcmp("&", args[n - 1]) == 0)
+          n--;
+        historydisp(args, n);
+      }
+
       else if (strcmp("exit", args[0]) == 0)
       {
         if (strcmp("&", args[n - 1]) == 0)
@@ -101,6 +110,7 @@ int main(int argc, char **argv)
 {
   pidcnt = 0;
   actives = 0; //number of active processes
+  
   getcwd(tild, FILENAME_MAX);
   strcat(tild, &argv[0][1]);
   tild[strlen(tild) - 5] = '\0';
@@ -119,7 +129,11 @@ int main(int argc, char **argv)
 
   signal(SIGCHLD, child_sig);
 
+  historyinit();
+
   twanloop();
+
+  historyexit();
 
   return 0;
 }

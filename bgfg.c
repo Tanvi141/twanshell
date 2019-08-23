@@ -6,20 +6,20 @@ void child_sig()
 
     int stat;
     pid = waitpid(-1, &stat, WNOHANG);
-        
+
     for (int i = 0; i < pidcnt; i++)
     {
         if (pid == pids[i].pid)
         {
-            
+
             int exit_status = WEXITSTATUS(stat);
             if (exit_status == 0)
             {
-                fprintf(stderr, "\nProcess %s with pid %d exited normally\n",pids[i].name ,pid);
+                fprintf(stderr, "\nProcess %s with pid %d exited normally\n", pids[i].name, pid);
             }
             else
             {
-                fprintf(stderr, "\nProcess %s with pid %d exited with exit status %d\n",pids[i].name ,pid, exit_status);
+                fprintf(stderr, "\nProcess %s with pid %d exited with exit status %d\n", pids[i].name, pid, exit_status);
             }
             tildconvertedpwd();
             fflush(stdout);
@@ -63,7 +63,7 @@ void backgrnd(char *args[])
     }
     else
     {
-        printf("[%d] %d\n",++actives,pid);
+        printf("[%d] %d\n", ++actives, pid);
         pids[pidcnt].pid = pid;
         strcpy(pids[pidcnt++].name, args[0]);
     }

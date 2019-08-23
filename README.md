@@ -52,7 +52,14 @@ This is a Linux Shell implemented in C.
   * Display the information related to a process.
   * At most one argument can be provided
   * If no argument provided, takes pid of the current process ie the shell
-  
+
+- `history [number]`
+
+ * Displays the last 'number' commands upto 10
+ * If 'number'>10 still prints last 10 commands
+ * Accepts upto one argument
+ * If no arguments it prints last 10 commands
+ * If the same command is executed multiple times it is printed only once
 
 - `exit`
 
@@ -80,6 +87,15 @@ The home directory of the shell is the directory where the executable file is st
 
 - `headers.h`
   * Contains all the required header files, global variables and function declarations.
+
+- `hist.txt`
+  * File to store the past commands, stores upto 20 commands
+
+- `history.c`
+  * historyinit() - Reads hist.txt and stores into array
+  * historyadd() - Adds each command to array if not repeat of the last entry
+  * historydisp() - Prints the history according to arguments
+  * historyexit() - Stores last 20 commands in hist.txt
 
 - `ls.c`
   * ls() - Initialises variables for listing directories

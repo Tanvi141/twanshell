@@ -28,6 +28,9 @@ struct procs{
 struct procs pids[1024];
 int pidcnt;
 int actives;
+char hists[20][4096];
+int histptr;
+int histcnt;
 
 extern int alphasort();
 void pwd(int n);
@@ -40,3 +43,7 @@ void child_sig();
 void foregrnd(char *args[]);
 void backgrnd(char *args[]);
 void tildconverter(char converted[],char current[]);
+void historyinit();
+void historyadd(char cmnd[]);
+void historydisp(char *args[], int n);
+void historyexit();

@@ -15,12 +15,14 @@ void child_sig()
             int exit_status = WEXITSTATUS(stat);
             if (exit_status == 0)
             {
-                fprintf(stderr, "\nProcess %s with pid %d exited normally\n", pids[i].name, pid);
+                fprintf(stderr, "\rProcess %s with pid %d exited normally\n", pids[i].name, pid);
             }
             else
             {
-                fprintf(stderr, "\nProcess %s with pid %d exited with exit status %d\n", pids[i].name, pid, exit_status);
+                fprintf(stderr, "\rProcess %s with pid %d exited with exit status %d\n", pids[i].name, pid, exit_status);
             }
+
+            pids[i].status = 0;
             tildconvertedpwd();
             fflush(stdout);
             actives--;
@@ -48,7 +50,7 @@ void foregrnd(char *args[]) //change params
     }
 }
 
-void backgrnd(char *args[])
+void backgrnd(char *args[], int n)
 {
     pid_t pid;
     pid = fork();
@@ -58,13 +60,25 @@ void backgrnd(char *args[])
     else if (pid == 0)
     {
         if (execvp(args[0], args) < 0)
-            printf("Error: execvp failed");
+            printf("Error: execvp failed"); //if execvp fails do we still want to add to the procs array
         exit(0);
     }
     else
     {
         printf("[%d] %d\n", ++actives, pid);
         pids[pidcnt].pid = pid;
-        strcpy(pids[pidcnt++].name, args[0]);
+        pids[pidcnt].status = 1;
+        char send[100] = "";
+        for (int i = 0; i < n-1; i++)
+        {
+            strcat(send, args[i]);
+            strcat(send, " ");
+        }
+
+        strcat(send, args[n-1]);
+
+        strcpy(pids[pidcnt++].name, send);
     }
+
+    //getting messed up in firefox &
 }

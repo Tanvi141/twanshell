@@ -20,14 +20,16 @@
 char hostbuffer[256];
 char namebuffer[256];
 char tild[FILENAME_MAX];
+
 struct procs{
     pid_t pid;
     char name[100];
+    int status;  // 1 means running, 0 means not
 };
-
 struct procs pids[1024];
 int pidcnt;
 int actives;
+
 char hists[20][4096];
 int histptr;
 int histcnt;
@@ -41,9 +43,14 @@ void ls(char *args[], int n);
 void pinfo(char *args[], int n);
 void child_sig();
 void foregrnd(char *args[]);
-void backgrnd(char *args[]);
+void backgrnd(char *args[],int n);
 void tildconverter(char converted[],char current[]);
 void historyinit();
 void historyadd(char cmnd[]);
 void historydisp(char *args[], int n);
 void historyexit();
+void senv(char *args[], int n);
+void unsenv(char *args[], int n);
+void jobs(char *args[],int n);
+void overkill(char *args[], int n);
+void kjob(char *args[], int n);

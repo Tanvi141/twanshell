@@ -1,5 +1,21 @@
 #include "headers.h"
 
+int splitter(char *tokens[], char *line, char *delim)
+{
+  int num = 0; //num stores number of arguments
+
+    tokens[num] = strtok(line, delim);
+
+    while (tokens[num] != NULL)
+    {
+      tokens[++num] = strtok(NULL, delim);
+    }
+
+    tokens[num]=NULL;
+
+    return num;
+}
+
 void twanloop()
 {
 
@@ -13,29 +29,15 @@ void twanloop()
     getline(&line, &bufsize, stdin);
 
     char *tokens[100];
-    int num = 0; //n stores number of arguments
-
-    tokens[num] = strtok(line, ";");
-
-    while (tokens[num] != NULL)
-    {
-      tokens[++num] = strtok(NULL, ";");
-    }
+    int num = splitter(tokens,line,";");
 
     for (int now = 0; now < num; now++)
     {
-   
+
       historyadd(tokens[now]);
 
       char *args[100];
-      int n = 0; //n stores number of arguments
-
-      args[n] = strtok(tokens[now], " \n\r\t");
-
-      while (args[n] != NULL)
-      {
-        args[++n] = strtok(NULL, " \n\r\t");
-      }
+      int n = splitter(args,tokens[now]," \n\r\t"); //n stores number of arguments
 
       if (n < 1)
         continue;
@@ -95,9 +97,45 @@ void twanloop()
         }
       }
 
+      else if (strcmp("setenv", args[0]) == 0)
+      {
+        if (strcmp("&", args[n - 1]) == 0)
+          n--;
+        senv(args, n);
+      }
+
+      else if (strcmp("jobs", args[0]) == 0)
+      {
+        if (strcmp("&", args[n - 1]) == 0)
+          n--;
+        jobs(args, n);
+      }
+
+      else if (strcmp("unsetenv", args[0]) == 0)
+      {
+        if (strcmp("&", args[n - 1]) == 0)
+          n--;
+        unsenv(args, n);
+      }
+
+      else if (strcmp("overkill", args[0]) == 0)
+      {
+        if (strcmp("&", args[n - 1]) == 0)
+          n--;
+        overkill(args, n);
+      }
+
+      else if (strcmp("kjob", args[0]) == 0)
+      {
+        if (strcmp("&", args[n - 1]) == 0)
+          n--;
+        kjob(args, n);
+      }
+
       else if (strcmp("&", args[n - 1]) == 0)
       {
-        backgrnd(args);
+        n--;
+        backgrnd(args,n);
       }
 
       else
@@ -110,7 +148,7 @@ int main(int argc, char **argv)
 {
   pidcnt = 0;
   actives = 0; //number of active processes
-  
+
   getcwd(tild, FILENAME_MAX);
   strcat(tild, &argv[0][1]);
   tild[strlen(tild) - 5] = '\0';

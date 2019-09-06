@@ -61,10 +61,20 @@ This is a Linux Shell implemented in C.
   * If no arguments it prints last 10 commands
   * If the same command is executed multiple times it is printed only once
 
-- `exit`
+- `quit`
 
   * Exit the shell.
 
+- `setenv [var] [value]`
+
+  * Sets value of environment variable 'var' to 'value'
+  * If 'value' is not given sets value to empty string
+  * Accepts either one or two arguments only
+
+- `unsetenv [var1] [var2] ...`
+ 
+  * Destroys all the environment variables 'var1','var2' etc given as arguments
+  * Must have at least one argument
 
 For all the other commands the shell will fork the current process and create child process and execute the command.
 
@@ -80,7 +90,7 @@ The home directory of the shell is the directory where the executable file is st
   * backgrnd() - For background processes
 
 - `cd.c`
-  * cd - Changes the directory
+  * cd() - Changes the directory
 
 - `echo.c` 
   * echo() - Prints arguments onto stdout
@@ -113,5 +123,6 @@ The home directory of the shell is the directory where the executable file is st
   * main() - main function to initialise things and call the loop
   * twanloop() - The loop that keeps running throughout
 
-
-
+- `env.c`
+   * senv() - Changes value of environment variable
+   * unsenv() - Detroys the environment variables

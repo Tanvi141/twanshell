@@ -24,16 +24,13 @@ void child_sig()
                     fprintf(stderr, "\rProcess %s with pid %d exited with exit status %d\n", pids[i].name, pid, exit_status);
                 }
 
-                strcpy(pids[i].status,"Exited");
+                pids[i].status=0;
                 tildconvertedpwd();
                 fflush(stdout);
                 actives--;
                 break;
             }
 
-            else if (WIFSTOPPED(stat)){
-                strcpy(pids[i].status,"Stopped");
-            }
 
         }
     }
@@ -75,7 +72,7 @@ void backgrnd(char *args[], int n)
     {
         printf("[%d] %d\n", ++actives, pid);
         pids[pidcnt].pid = pid;
-        strcpy(pids[pidcnt].status,"Running");
+        pids[pidcnt].status=1;
         char send[100] = "";
         for (int i = 0; i < n - 1; i++)
         {

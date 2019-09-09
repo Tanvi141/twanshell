@@ -5,28 +5,36 @@ void child_sig()
     pid_t pid;
 
     int stat;
-    pid = waitpid(-1, &stat, WNOHANG);
+    pid = waitpid(-1, &stat, WNOHANG|WUNTRACED);
 
     for (int i = 0; i < pidcnt; i++)
     {
         if (pid == pids[i].pid)
         {
 
-            int exit_status = WEXITSTATUS(stat);
-            if (exit_status == 0)
+            if (WIFEXITED(stat))
             {
-                fprintf(stderr, "\rProcess %s with pid %d exited normally\n", pids[i].name, pid);
-            }
-            else
-            {
-                fprintf(stderr, "\rProcess %s with pid %d exited with exit status %d\n", pids[i].name, pid, exit_status);
+                int exit_status = WEXITSTATUS(stat);
+                if (exit_status == 0)
+                {
+                    fprintf(stderr, "\rProcess %s with pid %d exited normally\n", pids[i].name, pid);
+                }
+                else
+                {
+                    fprintf(stderr, "\rProcess %s with pid %d exited with exit status %d\n", pids[i].name, pid, exit_status);
+                }
+
+                strcpy(pids[i].status,"Exited");
+                tildconvertedpwd();
+                fflush(stdout);
+                actives--;
+                break;
             }
 
-            pids[i].status = 0;
-            tildconvertedpwd();
-            fflush(stdout);
-            actives--;
-            break;
+            else if (WIFSTOPPED(stat)){
+                strcpy(pids[i].status,"Stopped");
+            }
+
         }
     }
 }
@@ -67,17 +75,18 @@ void backgrnd(char *args[], int n)
     {
         printf("[%d] %d\n", ++actives, pid);
         pids[pidcnt].pid = pid;
-        pids[pidcnt].status = 1;
+        strcpy(pids[pidcnt].status,"Running");
         char send[100] = "";
-        for (int i = 0; i < n-1; i++)
+        for (int i = 0; i < n - 1; i++)
         {
             strcat(send, args[i]);
             strcat(send, " ");
         }
 
-        strcat(send, args[n-1]);
+        strcat(send, args[n - 1]);
 
         strcpy(pids[pidcnt++].name, send);
+        //do a pid checker to avoid overflow
     }
 
     //getting messed up in firefox &

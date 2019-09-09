@@ -24,7 +24,7 @@ char tild[FILENAME_MAX];
 struct procs{
     pid_t pid;
     char name[100];
-    int status;  // 1 means running, 0 means not
+    char status[100]; //Running, Exited or Stopped
 };
 struct procs pids[1024];
 int pidcnt;

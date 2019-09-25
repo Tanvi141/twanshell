@@ -101,15 +101,14 @@ void ctrlzhandler(int sig_num)
         strcpy(pids[pidcnt++].name, fore.name);
         fore.status = 0;
         //do a pid checker to avoid overflow
-
-        fflush(stdout);
+        
         return;
     }
 
     else
         printf("twanshell: No foreground process\n");
-    fflush(stdout);
-    
+   
+    signal(SIGTSTP, ctrlzhandler);
     return;
 }
 
@@ -129,4 +128,5 @@ void ctrlchandler(int sig_num)
     }
     else
         printf("twanshell: No foreground process\n");
+    signal(SIGINT, ctrlchandler);
 }

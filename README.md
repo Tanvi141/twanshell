@@ -65,6 +65,10 @@ This is a Linux Shell implemented in C.
 
   * Exit the shell.
 
+- `exit`
+
+ * Exit the shell.
+
 - `setenv [var] [value]`
 
   * Sets value of environment variable 'var' to 'value'

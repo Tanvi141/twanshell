@@ -34,16 +34,17 @@ void child_sig()
     }
 }
 
-void foregrnd(char *args[], int n) //change params
+void foregrnd(char *args[], int n)
 {
     pid_t pid;
     pid = fork();
-    
+
     if (pid < 0)
         printf("twanshell: Error: Forking failed\n");
     else if (pid == 0)
     {
-    
+        setpgid(0, 0);
+
         if (execvp(args[0], args) < 0)
             printf("twanshell: Error: execvp failed\n");
 
@@ -51,7 +52,7 @@ void foregrnd(char *args[], int n) //change params
     }
     else
     {
-        fore.pid =pid;
+        fore.pid = pid;
 
         char send[100] = "";
         for (int i = 0; i < n - 1; i++)
@@ -70,7 +71,7 @@ void backgrnd(char *args[], int n)
 {
     pid_t pid;
     pid = fork();
-    //setpgid(0,0);
+    setpgid(0,0);
     if (pid < 0)
         printf("Error: Forking failed");
     else if (pid == 0)

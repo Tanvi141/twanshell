@@ -84,7 +84,7 @@ void twanloop()
         historydisp(args, n);
       }
 
-      else if (strcmp("exit", args[0]) == 0)
+      else if (strcmp("exit", args[0]) == 0 || strcmp("quit", args[0]) == 0 )
       {
         if (strcmp("&", args[n - 1]) == 0)
           n--;
@@ -163,7 +163,7 @@ int main(int argc, char **argv)
   pidcnt = 0;
   actives = 0; //number of active processes
   shellPID = getpid();
-  //fore.status=0;
+  fore.status=0;
   getcwd(tild, FILENAME_MAX);
   strcat(tild, &argv[0][1]);
   tild[strlen(tild) - 5] = '\0';

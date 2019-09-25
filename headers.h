@@ -24,11 +24,14 @@ char tild[FILENAME_MAX];
 struct procs{
     pid_t pid;
     char name[100];
-    int status; //1 means active, 0 means deleted
+    int status; //1 means active, 0 means deleted, 
 };
 struct procs pids[1024];
+struct procs fore;
 int pidcnt;
 int actives;
+pid_t shellPID;
+
 
 char hists[20][4096];
 int histptr;
@@ -42,7 +45,7 @@ void tildconvertedpwd();
 void ls(char *args[], int n);
 void pinfo(char *args[], int n);
 void child_sig();
-void foregrnd(char *args[]);
+void foregrnd(char *args[],int n);
 void backgrnd(char *args[],int n);
 void tildconverter(char converted[],char current[]);
 void historyinit();
@@ -54,3 +57,7 @@ void unsenv(char *args[], int n);
 void jobs(char *args[],int n);
 void overkill(char *args[], int n);
 void kjob(char *args[], int n);
+void bg(char *args[], int n);
+void fg(char *args[], int n);
+void ctrlzhandler(int sig_num);
+void ctrlchandler(int sig_num);

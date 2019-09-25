@@ -132,6 +132,20 @@ void twanloop()
         kjob(args, n);
       }
 
+      else if (strcmp("bg", args[0]) == 0)
+      {
+        if (strcmp("&", args[n - 1]) == 0)
+          n--;
+        bg(args, n);
+      }
+
+      else if (strcmp("fg", args[0]) == 0)
+      {
+        if (strcmp("&", args[n - 1]) == 0)
+          n--;
+        fg(args, n);
+      }
+
       else if (strcmp("&", args[n - 1]) == 0)
       {
         n--;
@@ -139,7 +153,7 @@ void twanloop()
       }
 
       else
-        foregrnd(args);
+        foregrnd(args,n);
     }
   }
 }
@@ -148,7 +162,8 @@ int main(int argc, char **argv)
 {
   pidcnt = 0;
   actives = 0; //number of active processes
-
+  shellPID = getpid();
+  //fore.status=0;
   getcwd(tild, FILENAME_MAX);
   strcat(tild, &argv[0][1]);
   tild[strlen(tild) - 5] = '\0';
@@ -166,6 +181,8 @@ int main(int argc, char **argv)
   }
 
   signal(SIGCHLD, child_sig);
+  signal (SIGTSTP, ctrlzhandler);
+  signal(SIGINT, ctrlchandler);
 
   historyinit();
 

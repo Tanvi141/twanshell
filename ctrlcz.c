@@ -77,7 +77,7 @@ void fg(char *args[], int n)
         printf("twanshell: lNo background process with given background number\n");
 }
 
-void ctrlzhandler(int sig_num) 
+void ctrlzhandler(int sig_num)
 {
     if (getpid() != shellPID)
         return;
@@ -101,14 +101,18 @@ void ctrlzhandler(int sig_num)
         strcpy(pids[pidcnt++].name, fore.name);
         fore.status = 0;
         //do a pid checker to avoid overflow
-        
+
         return;
     }
 
     else
-        printf("twanshell: No foreground process\n");
-   
+    {
+        printf("\ntwanshell: No foreground process\n");
+        fflush(stdout);
+    }
     signal(SIGTSTP, ctrlzhandler);
+    tildconvertedpwd();
+    fflush(stdout);
     return;
 }
 
@@ -127,6 +131,12 @@ void ctrlchandler(int sig_num)
         fore.status = 0;
     }
     else
-        printf("twanshell: No foreground process\n");
+    {
+        printf("\ntwanshell: No foreground process\n");
+        fflush(stdout);
+    }
     signal(SIGINT, ctrlchandler);
+    tildconvertedpwd();
+    fflush(stdout);
+    return;
 }

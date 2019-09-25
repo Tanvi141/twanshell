@@ -4,16 +4,33 @@ int splitter(char *tokens[], char *line, char *delim)
 {
   int num = 0; //num stores number of arguments
 
-    tokens[num] = strtok(line, delim);
+  tokens[num] = strtok(line, delim);
 
-    while (tokens[num] != NULL)
-    {
-      tokens[++num] = strtok(NULL, delim);
-    }
+  while (tokens[num] != NULL)
+  {
+    tokens[++num] = strtok(NULL, delim);
+  }
 
-    tokens[num]=NULL;
+  tokens[num] = NULL;
 
-    return num;
+  return num;
+}
+
+int checkredir(char word[], char *ops[])
+{
+  int c = 0;
+  for (int i = 0; i < strlen(word); i++)
+  {
+    if (word[i] == '<')
+      strcpy("<", ops[c++]);
+    else if (word[i] == '>' && (i + 1) < strlen(word) && word[i + 1] == '>')
+      strcpy(">>", ops[c++]);
+    else if (word[i] == '>')
+      strcpy("<", ops[c++]);
+  }
+
+  ops[c] = NULL;
+  return c;
 }
 
 void twanloop()
@@ -29,15 +46,24 @@ void twanloop()
     getline(&line, &bufsize, stdin);
 
     char *tokens[100];
-    int num = splitter(tokens,line,";");
+    int num = splitter(tokens, line, ";");
 
     for (int now = 0; now < num; now++)
     {
 
       historyadd(tokens[now]);
 
+      //redirection
+      char *ops[5];
+      int c = checkredir(tokens[now], ops);
+      if (c != 0)
+      {
+        redirect(tokens[now],ops,c);
+        continue;
+      }
+
       char *args[100];
-      int n = splitter(args,tokens[now]," \n\r\t"); //n stores number of arguments
+      int n = splitter(args, tokens[now], " \n\r\t"); //n stores number of arguments
 
       if (n < 1)
         continue;
@@ -84,7 +110,7 @@ void twanloop()
         historydisp(args, n);
       }
 
-      else if (strcmp("exit", args[0]) == 0 || strcmp("quit", args[0]) == 0 )
+      else if (strcmp("exit", args[0]) == 0 || strcmp("quit", args[0]) == 0)
       {
         if (strcmp("&", args[n - 1]) == 0)
           n--;
@@ -149,11 +175,11 @@ void twanloop()
       else if (strcmp("&", args[n - 1]) == 0)
       {
         n--;
-        backgrnd(args,n);
+        backgrnd(args, n);
       }
 
       else
-        foregrnd(args,n);
+        foregrnd(args, n);
     }
   }
 }
@@ -163,7 +189,7 @@ int main(int argc, char **argv)
   pidcnt = 0;
   actives = 0; //number of active processes
   shellPID = getpid();
-  fore.status=0;
+  fore.status = 0;
   getcwd(tild, FILENAME_MAX);
   strcat(tild, &argv[0][1]);
   tild[strlen(tild) - 5] = '\0';
@@ -181,7 +207,7 @@ int main(int argc, char **argv)
   }
 
   signal(SIGCHLD, child_sig);
-  signal (SIGTSTP, ctrlzhandler);
+  signal(SIGTSTP, ctrlzhandler);
   signal(SIGINT, ctrlchandler);
 
   historyinit();

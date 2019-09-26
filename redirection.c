@@ -2,57 +2,67 @@
 
 void redirect(char word[], char ops[5][5], int num) //spaces in redirect
 {
-    char *files[5];
-    int index = 0;
+    while (word[strlen(word) - 1] == '\n') //removes any trailing \n
+        word[strlen(word) - 1] = '\0';
 
-    files[index] = strtok(word, ops[0]);
-    while (files[index] != NULL)
+    char files[5][10000];
+    int index = 0;
+    int j = num;
+    for (int i = strlen(word); i >= 0; i--)
     {
-        if (files[index][strlen(files[index]) - 1] == '\n')
-            files[index][strlen(files[index]) - 1] = '\0';
-        index++;
-        files[index] = strtok(NULL, ops[index]);
+        if (word[i] == '<' || word[i] == '>')
+        {
+            if (i + 1 < strlen(word) && word[i + 1] != '\0')
+                strcpy(files[j--], &word[i + 1]);
+            word[i] = '\0';
+        }
     }
+    strcpy(files[0], word);
 
     int in, out;
     pid_t pid = fork(); //pid<0 case
 
-    if (pid == 0)
+    if (pid < 0)
+        fprintf(stderr, "Error in forking");
+    else if (pid == 0)
     {
-        if (strcmp(ops[0], "<") == 0)
+        for (int i = 0; i < num; i++)
         {
-            in = open(files[1], O_RDONLY);
-            if (in < 0)
+            // printf("files[%d+1]=%sz!\n", i, files[i + 1]);
+            if (strcmp(ops[i], "<") == 0)
             {
-                printf("Error opening file");
+                in = open(files[i + 1], O_RDONLY);
+                if (in < 0)
+                {
+                    fprintf(stderr, "Error opening file");
+                }
+
+                else
+                {
+                    dup2(in, 0);
+                    close(in);
+                }
             }
 
             else
             {
-                dup2(in, 0);
-                close(in);
+                if (strcmp(ops[i], ">") == 0)
+                    out = open(files[i + 1], O_TRUNC | O_WRONLY | O_CREAT, S_IRUSR | S_IRGRP | S_IROTH | S_IWUSR);
+                else
+                    out = open(files[i + 1], O_APPEND | O_WRONLY | O_CREAT, S_IRUSR | S_IRGRP | S_IROTH | S_IWUSR);
+
+                if (out < 0)
+                {
+                    fprintf(stderr, "Error opening file");
+                }
+
+                else
+                {
+                    dup2(out, 1);
+                    close(out);
+                }
             }
         }
-
-        else
-        {
-            if (strcmp(ops[0], ">") == 0)
-                out = open(files[1], O_TRUNC | O_WRONLY | O_CREAT, S_IRUSR | S_IRGRP | S_IROTH | S_IWUSR);
-            else
-                out = open(files[1], O_APPEND | O_WRONLY | O_CREAT, S_IRUSR | S_IRGRP | S_IROTH | S_IWUSR);
-
-            if (out < 0)
-            {
-                printf("Error opening file");
-            }
-
-            else
-            {
-                dup2(out, 1);
-                close(out);
-            }
-        }
-
         execbuiltin(files[0]);
         exit(0);
     }
@@ -60,6 +70,7 @@ void redirect(char word[], char ops[5][5], int num) //spaces in redirect
     else
     {
         int status;
-        while (wait(&status) != pid);
+        while (wait(&status) != pid)
+            ;
     }
 }

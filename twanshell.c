@@ -24,7 +24,10 @@ int checkredir(char word[], char ops[5][5])
     if (word[i] == '<')
       strcpy(&ops[c++][0], "<");
     else if (word[i] == '>' && (i + 1) < strlen(word) && word[i + 1] == '>')
+    {
       strcpy(&ops[c++][0], ">>");
+      i++;
+    }
     else if (word[i] == '>')
       strcpy(&ops[c++][0], ">");
   }
@@ -154,7 +157,7 @@ int execbuiltin(char word[])
   {
     foregrnd(args, n);
   }
-  
+
   return 0;
 }
 

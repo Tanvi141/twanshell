@@ -5,7 +5,7 @@ void bg(char *args[], int n)
 
     if (n != 2)
     {
-        printf("twanshell: kjob: Exactly one argument required\n");
+        fprintf(stderr,"twanshell: kjob: Exactly one argument required\n");
         return;
     }
 
@@ -37,14 +37,14 @@ void bg(char *args[], int n)
     }
 
     if (flag == 0)
-        printf("twanshell: No such process\n");
+        fprintf(stderr,"twanshell: No such process\n");
 }
 
 void fg(char *args[], int n)
 {
     if (n != 2)
     {
-        printf("twanshell: kjob: Exactly one argument required\n");
+        fprintf(stderr,"twanshell: kjob: Exactly one argument required\n");
         return;
     }
 
@@ -74,7 +74,7 @@ void fg(char *args[], int n)
     }
 
     if (flag == 0)
-        printf("twanshell: lNo background process with given background number\n");
+        fprintf(stderr,"twanshell: lNo background process with given background number\n");
 }
 
 void ctrlzhandler(int sig_num)
@@ -107,7 +107,7 @@ void ctrlzhandler(int sig_num)
 
     else
     {
-        printf("\ntwanshell: No foreground process\n");
+        fprintf(stderr,"\ntwanshell: No foreground process\n");
         fflush(stdout);
     }
     signal(SIGTSTP, ctrlzhandler);
@@ -131,7 +131,7 @@ void ctrlchandler(int sig_num)
     }
     else
     {
-        printf("\ntwanshell: No foreground process\n");
+        fprintf(stderr,"\ntwanshell: No foreground process\n");
         fflush(stdout);
         tildconvertedpwd();
     }

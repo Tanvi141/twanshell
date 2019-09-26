@@ -17,10 +17,10 @@ void senv(char *args[], int n)
     }
 
     else if (n == 1)
-        printf("twanshell: setenv: Too few arguments\n");
+        fprintf(stderr,"twanshell: setenv: Too few arguments\n");
 
     else
-        printf("twanshell: setenv: Too many arguments");
+        fprintf(stderr,"twanshell: setenv: Too many arguments");
 }
 
 void unsenv(char *args[], int n)
@@ -28,7 +28,7 @@ void unsenv(char *args[], int n)
     //take arbitrary number of arguments but more than one
 
     if (n == 1)
-        printf("twanshell: unsetenv: Too few arguments\n");
+        fprintf(stderr,"twanshell: unsetenv: Too few arguments\n");
 
     else
     {

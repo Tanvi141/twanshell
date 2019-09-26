@@ -93,7 +93,7 @@ void ls(char *args[], int n)
                     a = 1;
                 else
                 {
-                    printf("twanshell: Only flags 'l' and 'a' recognised\n");
+                    fprintf(stderr,"twanshell: Only flags 'l' and 'a' recognised\n");
                     return;
                 }
             }

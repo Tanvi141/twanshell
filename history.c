@@ -50,7 +50,7 @@ void historydisp(char *args[], int n)
     else if (n == 2)
         sscanf(args[1], "%d", &num);
     else
-        printf("twanshell: history: Too many arguments\n");
+        fprintf(stderr,"twanshell: history: Too many arguments\n");
 
     if (num > 10)
         num = 10;

@@ -5,7 +5,7 @@ void jobs(char *args[], int n)
     //what does stopped mean?
 
     if (n > 1)
-        printf("twanshell: jobs: Too many arguments");
+        fprintf(stderr,"twanshell: jobs: Too many arguments");
 
     int index = 0;
     for (int i = 0; i < pidcnt; i++)
@@ -29,11 +29,11 @@ void jobs(char *args[], int n)
                 unsigned long mem;
                 fscanf(fd, "%*d %*s %c %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %lu %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d", &statchar, &mem);
                 fclose(fd);
-                char state[100] = "Neither running not stopped";
+                char state[100] = "Running";
                 if (statchar == 'T' || statchar == 't')
                     strcpy(state, "Stopped");
-                else if (statchar == 'R')
-                    strcpy(state, "Running");
+                // else if (statchar == 'R')
+                //     strcpy(state, "Running");
 
                 printf("[%d] %s %s[%d]%c\n", index, state, pids[i].name, pids[i].pid, statchar);
             }
@@ -46,7 +46,7 @@ void overkill(char *args[], int n)
 
     if (n > 1)
     {
-        printf("twanshell: jobs: Too many arguments");
+       fprintf(stderr,"twanshell: jobs: Too many arguments");
         return;
     }
 
@@ -74,7 +74,7 @@ void kjob(char *args[], int n)
 
     if (n != 3)
     {
-        printf("twanshell: kjob: Exactly two arguments required\n");
+        fprintf(stderr,"twanshell: kjob: Exactly two arguments required\n");
         return;
     }
 
@@ -104,5 +104,5 @@ void kjob(char *args[], int n)
     }
 
     if (flag == 0)
-        printf("twanshell: No such process\n");
+        fprintf(stderr,"twanshell: No such process\n");
 }

@@ -4,7 +4,7 @@ void pwd(int n)
 {
   if (n > 1)
   {
-    printf("twanshell: pwd: too many arguments\n");
+    fprintf(stderr,"twanshell: pwd: too many arguments\n");
     return;
   }
   char buffer[FILENAME_MAX];

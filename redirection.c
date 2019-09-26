@@ -28,7 +28,6 @@ void redirect(char word[], char ops[5][5], int num) //spaces in redirect
     {
         for (int i = 0; i < num; i++)
         {
-            // printf("files[%d+1]=%sz!\n", i, files[i + 1]);
             if (strcmp(ops[i], "<") == 0)
             {
                 in = open(files[i + 1], O_RDONLY);

@@ -126,7 +126,6 @@ void ctrlchandler(int sig_num)
         if (kill(fore.pid, SIGINT) < 0)
         {
             perror("Error in kill");
-            return;
         }
         fore.status = 0;
     }
@@ -134,9 +133,10 @@ void ctrlchandler(int sig_num)
     {
         printf("\ntwanshell: No foreground process\n");
         fflush(stdout);
+        tildconvertedpwd();
     }
     signal(SIGINT, ctrlchandler);
-    tildconvertedpwd();
+    
     fflush(stdout);
     return;
 }

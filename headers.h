@@ -61,4 +61,5 @@ void bg(char *args[], int n);
 void fg(char *args[], int n);
 void ctrlzhandler(int sig_num);
 void ctrlchandler(int sig_num);
-void redirect(char word[], char *ops[], int num);
+void redirect(char word[], char ops[5][5], int num);
+int execbuiltin(char word[]);

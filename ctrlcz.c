@@ -69,7 +69,6 @@ void fg(char *args[], int n)
                 actives--;
                 
                 waitpid(-1, NULL, WUNTRACED);
-                
                 break;
             }
         }
@@ -78,6 +77,48 @@ void fg(char *args[], int n)
     if (flag == 0)
         fprintf(stderr,"twanshell: No background process with given background number\n");
 }
+
+// void ctrlzhandler(int sig_num)
+// {
+//     if (getpid() != shellPID)
+//         return;
+
+//     if (fore.status == 1)
+//     {
+//         printf("pid=%d\n",fore.pid);
+
+//         if (kill(fore.pid, SIGTTIN) < 0)
+//         {
+//             perror("Error in kill");
+//             return;
+//         }
+//         if (kill(fore.pid, SIGTSTP) < 0)
+//         {
+//             perror("Error in kill");
+//             return;
+//         }
+
+//         printf("[%d] %d\n", ++actives, fore.pid);
+//         pids[pidcnt].pid = fore.pid;
+//         pids[pidcnt].status = 1;
+//         strcpy(pids[pidcnt++].name, fore.name);
+//         fore.status = 0;
+//         //do a pid checker to avoid overflow
+//         //return;
+//         signal(SIGTSTP, ctrlzhandler);
+//     }
+
+//     else
+//     {
+//         fprintf(stderr,"\ntwanshell: No foreground process\n");
+//         tildconvertedpwd();
+//         fflush(stdout);
+//     }
+//     jobs(NULL,1);
+    
+//     //fflush(stdout);
+//     return;
+// }
 
 void ctrlzhandler(int sig_num)
 {
@@ -109,7 +150,7 @@ void ctrlzhandler(int sig_num)
 
     else
     {
-        fprintf(stderr,"\ntwanshell: No foreground process\n");
+        printf("\ntwanshell: No foreground process\n");
         fflush(stdout);
     }
     signal(SIGTSTP, ctrlzhandler);

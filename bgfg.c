@@ -34,25 +34,60 @@ void child_sig()
     }
 }
 
+// void foregrnd(char *args[], int n)
+// {
+//     pid_t pid;
+//     pid = fork();
+//     fore.pid = pid;
+
+//     char send[100] = "";
+//     for (int i = 0; i < n - 1; i++)
+//     {
+//         strcat(send, args[i]);
+//         strcat(send, " ");
+//     }
+//     strcat(send, args[n - 1]);
+//     strcpy(fore.name, send);
+//     fore.status = 1;
+//     if (pid < 0)
+//         fprintf(stderr, "twanshell: Error: Forking failed\n");
+//     else if (pid == 0)
+//     {
+//         if (execvp(args[0], args) < 0)
+//         {
+//             fprintf(stderr, "twanshell: Error: execvp failed\n");
+//             exit(0);
+//         }
+//     }
+//     else
+//     {
+
+//         int status;
+//         printf("pid sent to waitpid %d", pid);
+//         waitpid(pid, &status, WUNTRACED);
+//         // while (wait(&status) != pid) 
+//         //     ;
+//         //wait(NULL);
+//         printf("here");
+//         fore.status = 0;
+//     }
+// }
+
 void foregrnd(char *args[], int n)
 {
     pid_t pid;
     pid = fork();
 
     if (pid < 0)
-        fprintf(stderr, "twanshell: Error: Forking failed\n");
+        printf("twanshell: Error: Forking failed\n");
     else if (pid == 0)
     {
-        //setpgid(0, 0);
-        // close(STDIN_FILENO);
-        // close(STDOUT_FILENO);
-        // close(STDERR_FILENO);
+        setpgid(0, 0);
 
         if (execvp(args[0], args) < 0)
-        {
-            fprintf(stderr, "twanshell: Error: execvp failed\n");
-            exit(0);
-        }
+            printf("twanshell: Error: execvp failed\n");
+
+        exit(0);
     }
     else
     {
@@ -67,8 +102,7 @@ void foregrnd(char *args[], int n)
         strcat(send, args[n - 1]);
         strcpy(fore.name, send);
         fore.status = 1;
-
-        waitpid(-1, NULL, WUNTRACED);
+        waitpid(fore.pid, NULL, WUNTRACED);
     }
 }
 

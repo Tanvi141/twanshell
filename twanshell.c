@@ -106,7 +106,7 @@ int execbuiltin(char word[])
     else
     {
       //free(line);
-      overkill(NULL,1);
+      overkill(NULL, 1);
       return 1;
     }
   }
@@ -179,6 +179,9 @@ void twanloop()
 
   while (1)
   {
+    signal(SIGCHLD, child_sig);
+    signal(SIGTSTP, ctrlzhandler);
+    signal(SIGINT, ctrlchandler);
 
     tildconvertedpwd(tild);
 
@@ -195,7 +198,7 @@ void twanloop()
 
       //piping
       int p = checkpipe(tokens[now]);
-      if(p!=0)
+      if (p != 0)
       {
         piping(tokens[now]);
         continue;
@@ -242,10 +245,6 @@ int main(int argc, char **argv)
     printf("twanshell: Unable to get username\n");
     strcpy(namebuffer, "USERNAME");
   }
-
-  signal(SIGCHLD, child_sig);
-  signal(SIGTSTP, ctrlzhandler);
-  signal(SIGINT, ctrlchandler);
 
   historyinit();
 

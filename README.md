@@ -67,7 +67,7 @@ This is a Linux Shell implemented in C.
 
 - `exit`
 
- * Exit the shell.
+  * Exit the shell.
 
 - `setenv [var] [value]`
 
@@ -79,6 +79,27 @@ This is a Linux Shell implemented in C.
  
   * Destroys all the environment variables 'var1','var2' etc given as arguments
   * Must have at least one argument
+
+- `fg [jobnumber]`
+  * Brings a running or a stopped background job with given job number to foreground
+
+- `bg [jobnumber]`
+  * Changes a stopped background job to a running background job
+
+- `overkill`
+  * Kills all background process at once
+
+- `jobs`
+  * ​ Prints a list of all currently running jobs along with their pid, in particular, background jobs, in order of their creation along with their state - Running or Stopped.
+
+- `kjob [jobnumber] [signalnumber]`
+  * Takes the job id of a running job and sends a signal value to that process
+
+- `CTRL-Z`
+  * It should change the status of currently running job to stop, and push it in background process.
+
+- ​`CTRL-C` ​
+  * It should cause a SIGINT signal to be sent to the current foreground job of the shell​ 
 
 For all the other commands the shell will fork the current process and create child process and execute the command.
 

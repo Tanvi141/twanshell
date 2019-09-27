@@ -63,3 +63,5 @@ void ctrlzhandler(int sig_num);
 void ctrlchandler(int sig_num);
 void redirect(char word[], char ops[5][5], int num);
 int execbuiltin(char word[]);
+void piping(char word[]);
+int splitter(char *tokens[], char *line, char *delim);

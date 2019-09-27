@@ -69,7 +69,7 @@ void redirect(char word[], char ops[5][5], int num) //spaces in redirect
     else
     {
         int status;
-        while (wait(&status) != pid)
+        while (wait(&status) != pid)  //??????????????????????????
             ;
     }
 }

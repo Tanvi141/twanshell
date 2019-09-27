@@ -67,14 +67,16 @@ void fg(char *args[], int n)
                 fore.status = 1;
                 flag = 1;
                 actives--;
+                printf("here!!!");
                 waitpid(-1, NULL, WUNTRACED);
+                printf("here!!");
                 break;
             }
         }
     }
 
     if (flag == 0)
-        fprintf(stderr,"twanshell: lNo background process with given background number\n");
+        fprintf(stderr,"twanshell: No background process with given background number\n");
 }
 
 void ctrlzhandler(int sig_num)

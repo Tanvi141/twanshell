@@ -35,6 +35,18 @@ int checkredir(char word[], char ops[5][5])
   return c;
 }
 
+int checkpipe(char word[])
+{
+  int c = 0;
+  for (int i = 0; i < strlen(word); i++)
+  {
+    if (word[i] == '|')
+      c++;
+  }
+
+  return c;
+}
+
 int execbuiltin(char word[])
 {
   char *args[100];
@@ -94,6 +106,7 @@ int execbuiltin(char word[])
     else
     {
       //free(line);
+      overkill(NULL,1);
       return 1;
     }
   }
@@ -180,6 +193,14 @@ void twanloop()
 
       historyadd(tokens[now]);
 
+      //piping
+      int p = checkpipe(tokens[now]);
+      if(p!=0)
+      {
+        piping(tokens[now]);
+        continue;
+      }
+
       //redirection
       char ops[5][5];
       int c = checkredir(tokens[now], ops);
@@ -189,7 +210,7 @@ void twanloop()
         continue;
       }
 
-      else if (execbuiltin(tokens[now]) == 1)
+      if (execbuiltin(tokens[now]) == 1)
       {
         free(line);
         return;

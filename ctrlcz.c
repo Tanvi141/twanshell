@@ -148,15 +148,7 @@ void ctrlzhandler(int sig_num)
         return;
     }
 
-    else
-    {
-        printf("\ntwanshell: No foreground process\n");
-        fflush(stdout);
-    }
-    signal(SIGTSTP, ctrlzhandler);
-    tildconvertedpwd();
-    fflush(stdout);
-    return;
+    signal(SIGTSTP,ctrlzhandler);
 }
 
 void ctrlchandler(int sig_num)

@@ -65,7 +65,7 @@ void child_sig()
 //         int status;
 //         printf("pid sent to waitpid %d", pid);
 //         waitpid(pid, &status, WUNTRACED);
-//         // while (wait(&status) != pid) 
+//         // while (wait(&status) != pid)
 //         //     ;
 //         //wait(NULL);
 //         printf("here");
@@ -85,9 +85,10 @@ void foregrnd(char *args[], int n)
         setpgid(0, 0);
 
         if (execvp(args[0], args) < 0)
+        {
             printf("twanshell: Error: execvp failed\n");
-
-        exit(0);
+            exit(EXIT_FAILURE);
+        }
     }
     else
     {
@@ -102,7 +103,7 @@ void foregrnd(char *args[], int n)
         strcat(send, args[n - 1]);
         strcpy(fore.name, send);
         fore.status = 1;
-        waitpid(fore.pid, NULL, WUNTRACED);
+        waitpid(-1, NULL, WUNTRACED);
     }
 }
 

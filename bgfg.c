@@ -38,19 +38,21 @@ void foregrnd(char *args[], int n)
 {
     pid_t pid;
     pid = fork();
-    setpgid(0, 0);
+
     if (pid < 0)
         fprintf(stderr, "twanshell: Error: Forking failed\n");
     else if (pid == 0)
     {
-
+        //setpgid(0, 0);
         // close(STDIN_FILENO);
         // close(STDOUT_FILENO);
         // close(STDERR_FILENO);
 
         if (execvp(args[0], args) < 0)
+        {
             fprintf(stderr, "twanshell: Error: execvp failed\n");
-        printf("here!f\n");
+            exit(0);
+        }
     }
     else
     {
@@ -65,9 +67,8 @@ void foregrnd(char *args[], int n)
         strcat(send, args[n - 1]);
         strcpy(fore.name, send);
         fore.status = 1;
-        printf("here!\n");
+
         waitpid(-1, NULL, WUNTRACED);
-        printf("here\n");
     }
 }
 

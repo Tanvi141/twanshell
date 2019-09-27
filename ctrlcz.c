@@ -67,9 +67,9 @@ void fg(char *args[], int n)
                 fore.status = 1;
                 flag = 1;
                 actives--;
-                printf("here!!!");
+                
                 waitpid(-1, NULL, WUNTRACED);
-                printf("here!!");
+                
                 break;
             }
         }
@@ -128,6 +128,7 @@ void ctrlchandler(int sig_num)
         if (kill(fore.pid, SIGINT) < 0)
         {
             perror("Error in kill");
+            printf("%s",fore.name);
         }
         fore.status = 0;
     }

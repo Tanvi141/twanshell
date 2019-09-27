@@ -17,18 +17,25 @@ void piping(char word[])
         {
             dup2(in, 0);
 
-            if (i!=num-1)
+            if (i != num - 1)
                 dup2(p[1], 1);
 
             close(p[0]);
 
-            execbuiltin(tokens[i]);
+            char ops[5][5];
+            int c = checkredir(tokens[i], ops);
+            if (c != 0)
+            {
+                redirect(tokens[i], ops, c); 
+            }
+            else execbuiltin(tokens[i]);
             exit(1);
         }
         else
         {
             wait(NULL);
             close(p[1]);
+            out = p[1];
             in = p[0];
         }
     }

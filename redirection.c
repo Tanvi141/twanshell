@@ -28,12 +28,26 @@ void redirect(char word[], char ops[5][5], int num) //spaces in redirect
     {
         for (int i = 0; i < num; i++)
         {
+            //remove spaces in front
+            int temp = 0;
+            while (files[i + 1][temp] == ' ')
+                temp++;
+            for (int j = temp; j < strlen(files[i + 1])+1; j++)
+            {
+                files[i + 1][j - temp] = files[i + 1][j];
+            }
+
+            //remove trailing whilespaces
+            while (files[i+1][strlen(word) - 1] == ' ') 
+                files[i+1][strlen(word) - 1] = '\0';
+
             if (strcmp(ops[i], "<") == 0)
             {
                 in = open(files[i + 1], O_RDONLY);
                 if (in < 0)
                 {
-                    fprintf(stderr, "Error opening file");
+                    fprintf(stderr, "Error opening file !%s!\n", files[i + 1]);
+                    exit(0);
                 }
 
                 else
@@ -52,7 +66,8 @@ void redirect(char word[], char ops[5][5], int num) //spaces in redirect
 
                 if (out < 0)
                 {
-                    fprintf(stderr, "Error opening file");
+                    fprintf(stderr, "Error opening file !%s!", files[i + 1]);
+                    exit(0);
                 }
 
                 else
@@ -69,7 +84,7 @@ void redirect(char word[], char ops[5][5], int num) //spaces in redirect
     else
     {
         int status;
-        while (wait(&status) != pid)  //??????????????????????????
+        while (wait(&status) != pid) //??????????????????????????
             ;
     }
 }

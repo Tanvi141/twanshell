@@ -65,3 +65,5 @@ void redirect(char word[], char ops[5][5], int num);
 int execbuiltin(char word[]);
 void piping(char word[]);
 int splitter(char *tokens[], char *line, char *delim);
+int checkpipe(char word[]);
+int checkredir(char word[], char ops[5][5]);
